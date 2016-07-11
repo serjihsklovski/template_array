@@ -62,7 +62,7 @@ method_body_(T, pop_back, Array(T)) without_args {                              
     }                                                                           \
                                                                                 \
     return self->_array[self->_size-- - 1];                                     \
-}                                                                               \
+} throws_(EMPTY_ARRAY)                                                          \
                                                                                 \
                                                                                 \
 method_body_(void, reserve, Array(T)) without_args {                            \
@@ -117,7 +117,7 @@ method_body_(T, at, Array(T)) with_(int index) {                                
     }                                                                           \
                                                                                 \
     return self->_array[index];                                                 \
-}                                                                               \
+} throws_(INDEX_IS_OUT_OF_RANGE)                                                \
                                                                                 \
                                                                                 \
 method_body_(void, set, Array(T)) with_(int index, T value)                     \
@@ -129,7 +129,7 @@ method_body_(void, set, Array(T)) with_(int index, T value)                     
     }                                                                           \
                                                                                 \
     self->_array[index] = value;                                                \
-}                                                                               \
+} throws_(INDEX_IS_OUT_OF_RANGE)                                                \
                                                                                 \
                                                                                 \
 constructor_(Array(T))() {                                                      \
