@@ -8,7 +8,7 @@ int main() {
 
 
     /* creating array */
-    Array(double) arr = new_Array_double();     // create Array_double object
+    Array(double) arr = new_Array_double(MIN_CAPACITY);     // create Array_double object
 
     double var = 0.1;
 

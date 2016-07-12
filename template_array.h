@@ -16,7 +16,7 @@ extern "C" {
 
 
 /* Minimal capacity */
-#define MIN_CAPACITY 16
+#define MIN_CAPACITY 16u
 #define FACTOR 2
 
 
@@ -40,7 +40,7 @@ cclass_(Array_##T) {                                                            
     method_def_(void,   set,            Array(T)) with_(int index, T value);    \
 };                                                                              \
                                                                                 \
-constructor_(Array(T))();                                                       \
+constructor_(Array(T))(size_t capacity);                                        \
 destructor_(Array(T));
 
 
@@ -132,11 +132,11 @@ method_body_(void, set, Array(T)) with_(int index, T value)                     
 } throws_(INDEX_IS_OUT_OF_RANGE)                                                \
                                                                                 \
                                                                                 \
-constructor_(Array(T))() {                                                      \
+constructor_(Array(T))(size_t capacity) {                                       \
     new_self_(Array_##T);                                                       \
                                                                                 \
     self->_size = 0;                                                            \
-    self->_capacity = MIN_CAPACITY;                                             \
+    self->_capacity = capacity < MIN_CAPACITY ? MIN_CAPACITY : capacity;        \
     self->_array = (T*) calloc(self->_capacity, sizeof(T));                     \
                                                                                 \
     init_method_(push_back);                                                    \
