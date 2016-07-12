@@ -53,7 +53,7 @@ int main() {
         printf("    %lf\n", arr->pop_back(arr));
     }
 
-    printf("\narray before shinking: size=%d, capacity=%d\n", arr->_size, arr->_capacity);
+    printf("\narray before shrinking: size=%d, capacity=%d\n", arr->_size, arr->_capacity);
     arr->shrink(arr);
     printf("array after shrinking: size=%d, capacity=%d\n\n", arr->_size, arr->_capacity);
 
