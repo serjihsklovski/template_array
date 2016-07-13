@@ -73,6 +73,9 @@ int main() {
     arr->set(arr, 1, 222.222);              // change second element
     arr->set(arr, 0, arr->at(arr, -1));     // first = last
 
+    /* insertion */
+    arr->insert(arr, 1, 333.333);           // [111.111, 333.333, 222.222, 111.111]
+
     for (int i = 0; i < (int) arr->_size; ++i) {
         printf("%2i: %lf\n", i, arr->at(arr, i));
     }
