@@ -30,15 +30,15 @@ cclass_(Array_##T) {                                                            
     T*      _array;                                                             \
                                                                                 \
     /* methods */                                                               \
-    method_def_(void,   push_back,      Array(T)) with_(T value);               \
-    method_def_(T,      pop_back,       Array(T)) without_args;                 \
-    method_def_(void,   reserve,        Array(T)) without_args;                 \
-    method_def_(void,   shrink,         Array(T)) without_args;                 \
-    method_def_(_Bool,  is_empty,       Array(T)) without_args;                 \
-    method_def_(_Bool,  is_valid_index, Array(T)) with_(int index);             \
-    method_def_(T,      at,             Array(T)) with_(int index);             \
-    method_def_(void,   set,            Array(T)) with_(int index, T value);    \
-    method_def_(void,   insert,         Array(T)) with_(int index, T value);    \
+    method_def_(void,   push_back,  Array(T)) with_(T value);                   \
+    method_def_(T,      pop_back,   Array(T)) without_args;                     \
+    method_def_(void,   reserve,    Array(T)) without_args;                     \
+    method_def_(void,   shrink,     Array(T)) without_args;                     \
+    method_def_(_Bool,  is_empty,   Array(T)) without_args;                     \
+    method_def_(_Bool,  has_index,  Array(T)) with_(int index);                 \
+    method_def_(T,      at,         Array(T)) with_(int index);                 \
+    method_def_(void,   set,        Array(T)) with_(int index, T value);        \
+    method_def_(void,   insert,     Array(T)) with_(int index, T value);        \
 };                                                                              \
                                                                                 \
 constructor_(Array(T))(size_t capacity);                                        \
@@ -99,7 +99,7 @@ method_body_(_Bool, is_empty, Array(T)) without_args {                          
 }                                                                               \
                                                                                 \
                                                                                 \
-method_body_(_Bool, is_valid_index, Array(T)) with_(int index) {                \
+method_body_(_Bool, has_index, Array(T)) with_(int index) {                     \
     index = index >= 0 ? index : (int) self->_size + index;                     \
                                                                                 \
     if (index >= 0 && index < (int) self->_size) {                              \
@@ -113,7 +113,7 @@ method_body_(_Bool, is_valid_index, Array(T)) with_(int index) {                
 method_body_(T, at, Array(T)) with_(int index) {                                \
     index = index >= 0 ? index : (int) self->_size + index;                     \
                                                                                 \
-    if (index < 0 || index >= (int) self->_size) {                              \
+    if (!self->has_index(self, index)) {                                        \
         Throw(INDEX_IS_OUT_OF_RANGE);                                           \
     }                                                                           \
                                                                                 \
@@ -124,7 +124,7 @@ method_body_(T, at, Array(T)) with_(int index) {                                
 method_body_(void, set, Array(T)) with_(int index, T value) {                   \
     index = index >= 0 ? index : (int) self->_size + index;                     \
                                                                                 \
-    if (index < 0 || index >= (int) self->_size) {                              \
+    if (!self->has_index(self, index)) {                                        \
         Throw(INDEX_IS_OUT_OF_RANGE);                                           \
     }                                                                           \
                                                                                 \
@@ -135,7 +135,7 @@ method_body_(void, set, Array(T)) with_(int index, T value) {                   
 method_body_(void, insert, Array(T)) with_(int index, T value) {                \
     index = index >= 0 ? index : (int) self->_size + index;                     \
                                                                                 \
-    if (index < 0 || index >= (int) self->_size) {                              \
+    if (self->has_index(self, index)) {                                         \
         Throw(INDEX_IS_OUT_OF_RANGE);                                           \
     }                                                                           \
                                                                                 \
@@ -168,7 +168,7 @@ constructor_(Array(T))(size_t capacity) {                                       
     init_method_(reserve);                                                      \
     init_method_(shrink);                                                       \
     init_method_(is_empty);                                                     \
-    init_method_(is_valid_index);                                               \
+    init_method_(has_index);                                                    \
     init_method_(at);                                                           \
     init_method_(set);                                                          \
     init_method_(insert);                                                       \
