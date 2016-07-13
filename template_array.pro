@@ -6,7 +6,8 @@ QMAKE_CFLAGS += -std=c11
 
 SOURCES += main.c \
     lib/cexception/CException.c \
-    test/arrray_double.c
+    test/array_int.c \
+    test/array_double.c
 
 DISTFILES += \
     lib/cexception/LICENSE.txt \
@@ -16,5 +17,6 @@ HEADERS += \
     lib/cclasses/cclasses.h \
     lib/cexception/CException.h \
     template_array.h \
-    test/arrray_double.h \
-    error_codes.h
+    error_codes.h \
+    test/array_int.h \
+    test/array_double.h

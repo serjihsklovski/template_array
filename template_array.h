@@ -50,6 +50,11 @@ destructor_(Array(T));
 /* This macros generates a code for methods of Array(T) */
 #define TemplateArrayImplementation(T)                                          \
                                                                                 \
+static int _get_abs_index(int relative_index, size_t size) {                    \
+    return relative_index >= 0 ? relative_index : (int) size + relative_index;  \
+}                                                                               \
+                                                                                \
+                                                                                \
 method_body_(void, push_back, Array(T)) with_(T value) {                        \
     if (self->_size == self->_capacity) {                                       \
         self->reserve(self);                                                    \
@@ -102,7 +107,7 @@ method_body_(_Bool, is_empty, Array(T)) without_args {                          
                                                                                 \
                                                                                 \
 method_body_(_Bool, has_index, Array(T)) with_(int index) {                     \
-    index = index >= 0 ? index : (int) self->_size + index;                     \
+    index = _get_abs_index(index, self->_size);                                 \
                                                                                 \
     if (index >= 0 && index < (int) self->_size) {                              \
         return 1;                                                               \
@@ -113,33 +118,33 @@ method_body_(_Bool, has_index, Array(T)) with_(int index) {                     
                                                                                 \
                                                                                 \
 method_body_(T, at, Array(T)) with_(int index) {                                \
-    index = index >= 0 ? index : (int) self->_size + index;                     \
-                                                                                \
     if (!self->has_index(self, index)) {                                        \
         Throw(INDEX_IS_OUT_OF_RANGE);                                           \
     }                                                                           \
+                                                                                \
+    index = _get_abs_index(index, self->_size);                                 \
                                                                                 \
     return self->_array[index];                                                 \
 } throws_(INDEX_IS_OUT_OF_RANGE)                                                \
                                                                                 \
                                                                                 \
 method_body_(void, set, Array(T)) with_(int index, T value) {                   \
-    index = index >= 0 ? index : (int) self->_size + index;                     \
-                                                                                \
     if (!self->has_index(self, index)) {                                        \
         Throw(INDEX_IS_OUT_OF_RANGE);                                           \
     }                                                                           \
+                                                                                \
+    index = _get_abs_index(index, self->_size);                                 \
                                                                                 \
     self->_array[index] = value;                                                \
 } throws_(INDEX_IS_OUT_OF_RANGE)                                                \
                                                                                 \
                                                                                 \
 method_body_(void, insert, Array(T)) with_(int index, T value) {                \
-    index = index >= 0 ? index : (int) self->_size + index;                     \
-                                                                                \
     if (self->has_index(self, index)) {                                         \
         Throw(INDEX_IS_OUT_OF_RANGE);                                           \
     }                                                                           \
+                                                                                \
+    index = _get_abs_index(index, self->_size);                                 \
                                                                                 \
     if (self->_size + 1u >= self->_capacity) {                                  \
         self->reserve(self);                                                    \
@@ -159,11 +164,11 @@ method_body_(void, insert, Array(T)) with_(int index, T value) {                
                                                                                 \
                                                                                 \
 method_body_(T, pop, Array(T)) with_(int index) {                               \
-    index = index >= 0 ? index : (int) self->_size + index;                     \
-                                                                                \
     if (!self->has_index(self, index)) {                                        \
         Throw(INDEX_IS_OUT_OF_RANGE);                                           \
     }                                                                           \
+                                                                                \
+    index = _get_abs_index(index, self->_size);                                 \
                                                                                 \
     T value = self->_array[index];                                              \
                                                                                 \

@@ -1,18 +1,23 @@
 #include <stdio.h>
-#include "test/arrray_double.h"
+#include "test/array_double.h"
+#include "test/array_int.h"
 
 
 int main() {
     printf("size of 'Array_double': %d bytes.\n", sizeof(Array_double));
     printf("size of 'struct _Array_double_t': %d bytes.\n\n", sizeof(struct _Array_double_t));
+    printf("size of 'Array_int': %d bytes.\n", sizeof(Array_int));
+    printf("size of 'struct _Array_int_t': %d bytes.\n\n", sizeof(struct _Array_int_t));
 
 
     /* creating array */
     Array(double) arr = new_Array_double(MIN_CAPACITY);     // create Array_double object
+    Array(int) vec = new_Array_int(MIN_CAPACITY);           // create Array_int object
 
     double var = 0.1;
 
-    printf("new array: size=%d, capacity=%d\n\n", arr->_size, arr->_capacity);
+    printf("arr: size=%d, capacity=%d\n", arr->_size, arr->_capacity);
+    printf("vec: size=%d, capacity=%d\n\n", vec->_size, vec->_capacity);
 
 
     /* pushing elements */
@@ -22,10 +27,22 @@ int main() {
         arr->push_back(arr, var);
         printf("    number %lf was pushed into arr\n", var);
     }
+    puts("");
 
-    printf("\narray before shinking: size=%d, capacity=%d\n", arr->_size, arr->_capacity);
+    for (int i = 0; i < 17; ++i) {
+        vec->push_back(vec, i * i);
+        printf("    number %d was pushed into vec\n", vec->at(vec, -1));
+    }
+    puts("");
+
+    printf("arr before shinking: size=%d, capacity=%d\n", arr->_size, arr->_capacity);
+    printf("vec before shinking: size=%d, capacity=%d\n", vec->_size, vec->_capacity);
+
     arr->shrink(arr);
-    printf("array after shrinking: size=%d, capacity=%d\n\n", arr->_size, arr->_capacity);
+    vec->shrink(vec);
+
+    printf("arr after shrinking: size=%d, capacity=%d\n", arr->_size, arr->_capacity);
+    printf("vec after shrinking: size=%d, capacity=%d\n\n", vec->_size, vec->_capacity);
 
     for (int i = 0; i < (int) arr->_size; ++i) {
         printf("%2i: %lf\n", i, arr->at(arr, i));
@@ -82,6 +99,7 @@ int main() {
     }
 
     delete_(Array_double)(arr);
+    delete_(Array_int)(vec);
 
     return 0;
 }
