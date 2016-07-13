@@ -39,6 +39,8 @@ cclass_(Array_##T) {                                                            
     method_def_(T,      at,         Array(T)) with_(int index);                 \
     method_def_(void,   set,        Array(T)) with_(int index, T value);        \
     method_def_(void,   insert,     Array(T)) with_(int index, T value);        \
+    method_def_(T,      pop,        Array(T)) with_(int index);                 \
+    method_def_(void,   clear,      Array(T)) without_args;                     \
 };                                                                              \
                                                                                 \
 constructor_(Array(T))(size_t capacity);                                        \
@@ -156,6 +158,29 @@ method_body_(void, insert, Array(T)) with_(int index, T value) {                
 } throws_(INDEX_IS_OUT_OF_RANGE)                                                \
                                                                                 \
                                                                                 \
+method_body_(T, pop, Array(T)) with_(int index) {                               \
+    index = index >= 0 ? index : (int) self->_size + index;                     \
+                                                                                \
+    if (!self->has_index(self, index)) {                                        \
+        Throw(INDEX_IS_OUT_OF_RANGE);                                           \
+    }                                                                           \
+                                                                                \
+    T value = self->_array[index];                                              \
+                                                                                \
+    for (unsigned int i = index; i < self->_size - 1; ++i) {                    \
+        self->_array[i] = self->_array[i + 1];                                  \
+    }                                                                           \
+                                                                                \
+    --self->_size;                                                              \
+    return value;                                                               \
+} throws_(INDEX_IS_OUT_OF_RANGE)                                                \
+                                                                                \
+                                                                                \
+method_body_(void, clear, Array(T)) without_args {                              \
+    self->_size = 0;                                                            \
+}                                                                               \
+                                                                                \
+                                                                                \
 constructor_(Array(T))(size_t capacity) {                                       \
     new_self_(Array_##T);                                                       \
                                                                                 \
@@ -172,6 +197,8 @@ constructor_(Array(T))(size_t capacity) {                                       
     init_method_(at);                                                           \
     init_method_(set);                                                          \
     init_method_(insert);                                                       \
+    init_method_(pop);                                                          \
+    init_method_(clear);                                                        \
                                                                                 \
     return self;                                                                \
 }                                                                               \
