@@ -42,6 +42,7 @@ cclass_(Array_##T) {                                                            
     method_def_(T,      pop,        Array(T)) with_(int index);                 \
     method_def_(void,   clear,      Array(T)) without_args;                     \
     method_def_(Array(T),   copy,   Array(T)) without_args;                     \
+    method_def_(void,   swap,       Array(T)) with_(int index_1, int index_2);  \
 };                                                                              \
                                                                                 \
 constructor_(Array(T))(size_t capacity);                                        \
@@ -200,6 +201,26 @@ method_body_(Array(T), copy, Array(T)) without_args {                           
 }                                                                               \
                                                                                 \
                                                                                 \
+method_body_(void, swap, Array(T)) with_(int index_1, int index_2) {            \
+    index_1 = _get_abs_index(index_1, self->_size);                             \
+    index_2 = _get_abs_index(index_2, self->_size);                             \
+                                                                                \
+    if (!self->has_index(self, index_1) ||                                      \
+        !self->has_index(self, index_2))                                        \
+    {                                                                           \
+        Throw(INDEX_IS_OUT_OF_RANGE);                                           \
+    }                                                                           \
+                                                                                \
+    if (index_1 == index_2) {                                                   \
+        return;                                                                 \
+    } else {                                                                    \
+        T temp = self->_array[index_1];                                         \
+        self->_array[index_1] = self->_array[index_2];                          \
+        self->_array[index_2] = temp;                                           \
+    }                                                                           \
+} throws_(INDEX_IS_OUT_OF_RANGE)                                                \
+                                                                                \
+                                                                                \
 constructor_(Array(T))(size_t capacity) {                                       \
     new_self_(Array_##T);                                                       \
                                                                                 \
@@ -219,6 +240,7 @@ constructor_(Array(T))(size_t capacity) {                                       
     init_method_(pop);                                                          \
     init_method_(clear);                                                        \
     init_method_(copy);                                                         \
+    init_method_(swap);                                                         \
                                                                                 \
     return self;                                                                \
 }                                                                               \
