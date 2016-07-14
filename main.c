@@ -97,9 +97,20 @@ int main() {
     for (int i = 0; i < (int) arr->_size; ++i) {
         printf("%2i: %lf\n", i, arr->at(arr, i));
     }
+    puts("");
+
+
+    /* copying */
+    Array(int) vec2 = vec->copy(vec);
 
     delete_(Array_double)(arr);
     delete_(Array_int)(vec);
+
+    for (int i = 0; i < (int) vec2->_size; ++i) {
+        printf("%2d: %d\n", i, vec2->at(vec2, i));
+    }
+
+    delete_(Array_int)(vec2);
 
     return 0;
 }

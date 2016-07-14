@@ -41,6 +41,7 @@ cclass_(Array_##T) {                                                            
     method_def_(void,   insert,     Array(T)) with_(int index, T value);        \
     method_def_(T,      pop,        Array(T)) with_(int index);                 \
     method_def_(void,   clear,      Array(T)) without_args;                     \
+    method_def_(Array(T),   copy,   Array(T)) without_args;                     \
 };                                                                              \
                                                                                 \
 constructor_(Array(T))(size_t capacity);                                        \
@@ -186,6 +187,19 @@ method_body_(void, clear, Array(T)) without_args {                              
 }                                                                               \
                                                                                 \
                                                                                 \
+method_body_(Array(T), copy, Array(T)) without_args {                           \
+    Array(T) new_array = new_(Array_##T)(self->_capacity);                      \
+                                                                                \
+    new_array->_size = self->_size;                                             \
+                                                                                \
+    for (unsigned int i = 0; i < self->_size; ++i) {                            \
+        new_array->_array[i] = self->_array[i];                                 \
+    }                                                                           \
+                                                                                \
+    return new_array;                                                           \
+}                                                                               \
+                                                                                \
+                                                                                \
 constructor_(Array(T))(size_t capacity) {                                       \
     new_self_(Array_##T);                                                       \
                                                                                 \
@@ -204,6 +218,7 @@ constructor_(Array(T))(size_t capacity) {                                       
     init_method_(insert);                                                       \
     init_method_(pop);                                                          \
     init_method_(clear);                                                        \
+    init_method_(copy);                                                         \
                                                                                 \
     return self;                                                                \
 }                                                                               \
